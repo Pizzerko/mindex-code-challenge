@@ -69,7 +69,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         if (employee.getDirectReports() != null) {
             for (Employee directReport : employee.getDirectReports()) {
-                count += 1 + countReports(directReport); // add 1 for the direct report and then recursively count their reports
+                Employee empl = employeeRepository.findByEmployeeId(directReport.getEmployeeId()); // need to find the direct report in the repository to get their direct reports and continue counting recursively
+                count += 1 + countReports(empl); // add 1 for the direct report and then recursively count their reports
             }
         }
 

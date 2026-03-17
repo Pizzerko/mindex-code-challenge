@@ -43,7 +43,7 @@ public class DataBootstrap {
             employeeRepository.insert(employee);
         }
 
-        // Load and insert compensations
+        //*  Load and insert compensations
         InputStream compensationInputStream = this.getClass().getResourceAsStream(COMPENSATION_DATASTORE_LOCATION);
 
         Compensation[] compensations = null;
@@ -55,7 +55,7 @@ public class DataBootstrap {
         }
 
         for (Compensation compensation : compensations) {
-            compensationRepository.insert(compensation);
+            compensationRepository.save(compensation); // using save to handle both insert and update scenarios
         }
     }
 }

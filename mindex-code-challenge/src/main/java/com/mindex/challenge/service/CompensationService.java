@@ -1,5 +1,8 @@
 package com.mindex.challenge.service;
 
-public class CompensationService {
-    
+import com.mindex.challenge.data.Compensation;
+
+public interface CompensationService {
+    Compensation create(Compensation compensation);
+    Compensation read(String employeeId);
 }
