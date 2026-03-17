@@ -2,6 +2,7 @@ package com.mindex.challenge.service.impl;
 
 import com.mindex.challenge.dao.EmployeeRepository;
 import com.mindex.challenge.data.Employee;
+import com.mindex.challenge.data.ReportingStructure;
 import com.mindex.challenge.service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,5 +46,33 @@ public class EmployeeServiceImpl implements EmployeeService {
         LOG.debug("Updating employee [{}]", employee);
 
         return employeeRepository.save(employee);
+    }
+
+    @Override
+    public ReportingStructure readReportingStructure(String id) {
+        LOG.debug("Creating employee with id [{}]", id);
+
+        Employee employee = employeeRepository.findByEmployeeId(id);
+
+        if (employee == null) {
+            throw new RuntimeException("Invalid employeeId: " + id);
+        }
+        ReportingStructure reportingStructure = new ReportingStructure();
+        reportingStructure.setEmployee(employee);
+        reportingStructure.setNumberOfReports(countReports(employee)); // set the number of reports for the given employee by calling the countReports method which will recursively count the number of reports for the given employee and all of their direct reports
+
+        return reportingStructure;
+    }
+
+    public int countReports(Employee employee) { // separate method to count the number of reports for clean code and avoid cluttering. Better for testing by isolating the specific logic.
+        int count = 0;
+
+        if (employee.getDirectReports() != null) {
+            for (Employee directReport : employee.getDirectReports()) {
+                count += 1 + countReports(directReport); // add 1 for the direct report and then recursively count their reports
+            }
+        }
+
+        return count;
     }
 }

@@ -1,10 +1,8 @@
 package com.mindex.challenge.data;
 
-import java.util.List;
-
-public class ReportingStructure {
+public class ReportingStructure { // made different from Employee class as it has different fields and is used for a different purpose
     private Employee employee;
-    private int numberOfReports;
+    private int numberOfReports; // probably needs dfs/bfs to calculate this field
 
     public ReportingStructure() {
     }
