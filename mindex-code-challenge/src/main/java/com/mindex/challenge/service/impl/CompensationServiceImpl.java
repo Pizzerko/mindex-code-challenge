@@ -5,6 +5,9 @@ import com.mindex.challenge.data.Employee;
 import com.mindex.challenge.data.Compensation;
 import com.mindex.challenge.dao.CompensationRepository;
 import com.mindex.challenge.service.CompensationService;
+
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,12 +38,31 @@ public class CompensationServiceImpl implements CompensationService {
     }
 
     @Override
-    public Compensation read(String employeeId) { // retuns compensation for given employeeId
-        LOG.debug("Reading compensation with employee id [{}]", employeeId);
+    public List<Compensation> read(String employeeId) { // retuns list of compensation for given employeeId
+        LOG.debug("Reading all compensation records for employee id [{}]", employeeId);
 
-        return compensationRepository.findById(employeeId)
-        .orElseThrow(() -> new RuntimeException(
-            "Compensation not found for employee id: " + employeeId));
+        if(employeeRepository.findByEmployeeId(employeeId) == null) {
+            throw new RuntimeException("Invalid employeeId: " + employeeId);
+        }
+
+        List<Compensation> compensations = compensationRepository.findByEmployeeId(employeeId);
+
+
+        return compensations;
+    }
+
+    @Override
+    public Compensation readLatest(String employeeId) { // returns the latest compensation record for the given employeeId
+        LOG.debug("Reading latest compensation record for employee id [{}]", employeeId);
+
+        if(employeeRepository.findByEmployeeId(employeeId) == null) {
+            throw new RuntimeException("Invalid employeeId: " + employeeId);
+        }
+
+        Compensation compensation =
+            compensationRepository.findTopByEmployeeIdOrderByEffectiveDateDesc(employeeId);
+
+        return compensation;
 
     }
     

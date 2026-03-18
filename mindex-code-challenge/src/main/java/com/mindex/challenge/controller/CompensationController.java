@@ -2,6 +2,9 @@ package com.mindex.challenge.controller;
 
 import com.mindex.challenge.data.Compensation;
 import com.mindex.challenge.service.CompensationService;
+
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,18 +21,25 @@ public class CompensationController {
     @Autowired
     private CompensationService compensationService;
 
-    @PostMapping("/compensation")
+    @PostMapping("/employee/compensations")
     public Compensation create(@RequestBody Compensation compensation) {
         LOG.debug("Received compensation create request for [{}]", compensation);
 
         return compensationService.create(compensation);
     }
 
-    @GetMapping("/compensation/{employeeId}")
-    public Compensation read(@PathVariable String employeeId) {
+    @GetMapping("/employee/{employeeId}/compensations/all")
+    public List<Compensation> readAll(@PathVariable String employeeId) {
         LOG.debug("Received compensation read request for employeeId [{}]", employeeId);
 
         return compensationService.read(employeeId);
+    }
+    
+    @GetMapping("/employee/{employeeId}/compensations/latest")
+    public Compensation readLatest(@PathVariable String employeeId) {
+        LOG.debug("Received compensation read request for employeeId [{}]", employeeId);
+
+        return compensationService.readLatest(employeeId);
     }
 
 }
