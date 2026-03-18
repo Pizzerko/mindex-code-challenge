@@ -1,6 +1,7 @@
 package com.mindex.challenge.service.impl;
 
 import com.mindex.challenge.data.Employee;
+import com.mindex.challenge.data.ReportingStructure;
 import com.mindex.challenge.service.EmployeeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +25,7 @@ public class EmployeeServiceImplTest {
 
     private String employeeUrl;
     private String employeeIdUrl;
+    private String reportingStructureUrl; // testing reportingstructure in same test class since business logic was written in the employeeServiceImpl file.
 
     @Autowired
     private EmployeeService employeeService;
@@ -38,6 +40,7 @@ public class EmployeeServiceImplTest {
     public void setup() {
         employeeUrl = "http://localhost:" + port + "/employee";
         employeeIdUrl = "http://localhost:" + port + "/employee/{id}";
+        reportingStructureUrl = "http://localhost:" + port + "/reportingStructure/{id}"; // added reportingStructureUrl for testing the readReportingStructure endpoint 
     }
 
     @Test
@@ -82,5 +85,15 @@ public class EmployeeServiceImplTest {
         assertEquals(expected.getLastName(), actual.getLastName());
         assertEquals(expected.getDepartment(), actual.getDepartment());
         assertEquals(expected.getPosition(), actual.getPosition());
+    }
+
+    public void testReportingStructure() {
+        String johnLennonId = "16a596ae-edd3-4847-99fe-c4518e82c86f";
+
+        ReportingStructure reportingStructure = restTemplate.getForEntity(reportingStructureUrl, ReportingStructure.class, johnLennonId).getBody();
+        assertNotNull(reportingStructure);
+        assertNotNull(reportingStructure.getEmployee());
+        assertEquals(johnLennonId, reportingStructure.getEmployee().getEmployeeId());
+        assertEquals(4, reportingStructure.getNumberOfReports());
     }
 }
